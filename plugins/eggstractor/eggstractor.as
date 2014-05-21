@@ -8,9 +8,11 @@ package {
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.media.SoundMixer;
+	import flash.media.*;
 
 	import flash.external.*;
 	import flash.utils.ByteArray;
+	import mx.utils.*;
 
 
 	/** An example plugin that tests various player integrations. **/
@@ -23,6 +25,13 @@ package {
 		private var field:TextField;
 		private var infoBox:TextField;
 		private var clickButton:Sprite;
+		private var bytes:ByteArray;
+
+		private var SPECTRUM_LENGTH:Number = 512;
+		private var reduction:int;
+		private var size:int;
+
+		private var soundChannelSpectrum:SoundChannel;
 
 		/** Let the player know what the name of your plugin is. **/
 		public function get id():String {
@@ -51,6 +60,10 @@ package {
 			infoBox.height = 20;
 			infoBox.width = 300;
 			addChild(infoBox);
+
+			bytes = new ByteArray();
+			size = 512;
+			reduction = Math.round(SPECTRUM_LENGTH / size);
 		};
 
 
@@ -80,10 +93,8 @@ package {
 
 
 		private function timeHandler(event:MediaEvent):void {
-			infoBox.text = Math.round(event.duration - event.position) + " seconds left";
-			var ba : ByteArray = new ByteArray();
-			SoundMixer.computeSpectrum(ba, true, 0);
-			ExternalInterface.call("receiveMix", ba.toString());
+			// infoBox.text = Math.round(event.duration - event.position) + " seconds left";
+			ExternalInterface.call("receiveMix", getSpectrum());
 		};
 
 
@@ -104,6 +115,31 @@ package {
 			}
 		};
 
+		private function byMaximumValues(spectrum:ByteArray):Vector.<Number> {
+		
+			var byMax:Vector.<Number> = new Vector.<Number>(size, true);
+			
+			for (var i:int = 0; i < SPECTRUM_LENGTH; i++) {
+				byMax[Math.floor(i / reduction)] = Math.max(spectrum.readFloat(), byMax[Math.floor(i / reduction)]);
+			}
+				
+			return byMax;
+		};
+
+		private function getSpectrum():Vector.<Number> {
+			var result:Vector.<Number>;
+			bytes = new ByteArray();
+
+			try {
+				SoundMixer.computeSpectrum(bytes, false);
+				result = byMaximumValues(bytes);
+			}
+			catch (e:Error) {
+
+			}
+
+			return result;
+		};
 
 		private function completeHandler(evt:MediaEvent):void {
 			infoBox.text = "video complete";

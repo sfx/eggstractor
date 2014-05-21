@@ -57,55 +57,17 @@
 
 <script type="text/javascript">
     jwplayer("eggstractor").setup({
-        file: 'http://content.bitsontherun.com/videos/bkaovAYt-injeKYZS.mp4',
+        file: 'rtmp://beatportlive.flash.internapcdn.net/beatportlive/live_1/test',
         image: 'http://content.bitsontherun.com/thumbs/bkaovAYt-480.jpg',
+        rtmp: {
+            subscribe: true
+        },
         primary: primaryCookie,
         plugins: {
             "../plugins/eggstractor/eggstractor.js": {}
         }
     });
 </script>
-
-<h2>Hello World</h2>
-
-<p>This player loads the <em>helloworld</em> example plugin.</p>
-
-<div id="helloworld"></div>
-
-<script type="text/javascript">
-    jwplayer("helloworld").setup({
-        file: 'http://content.bitsontherun.com/videos/bkaovAYt-injeKYZS.mp4',
-        image: 'http://content.bitsontherun.com/thumbs/bkaovAYt-480.jpg',
-        primary: primaryCookie,
-        plugins: {
-            "../plugins/helloworld/helloworld.js": {
-                text: "Hello to the World!"
-            }
-        }
-    });
-</script>
-
-
-
-<h2>API Tester</h2>
-
-<p>This player loads the <em>apitester</em> example plugin.</p>
-
-<div id="apitester"></div>
-
-<script type="text/javascript">
-    jwplayer("apitester").setup({
-        file: 'http://content.bitsontherun.com/videos/3XnJSIm4-I3ZmuSFT.m4a',
-        image: 'http://content.bitsontherun.com/thumbs/3XnJSIm4-480.jpg',
-        height: 204,
-        primary: primaryCookie,
-        plugins: {
-            "../plugins/apitester/apitester.js": {}
-        }
-    });
-</script>
-
-
 
 </body>
 </html>
